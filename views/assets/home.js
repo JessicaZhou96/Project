@@ -13,13 +13,14 @@ $(() => {
         }
         
         // if email is valid
-        if (validateEmail(user.email) && validatePhone(user.phone)) {
+        // if (validateUser(user)) {
             // model -> send data to server side
             sendUser(user);
-        
             // view -> show confirm-page
-            showDetailPage();
-        }
+            showDetailPage(user);
+            // view -> reset add-page previous input value
+            $('#add-page input').val("");
+        // }
     })
 
     // index button -> show home-page
@@ -77,41 +78,52 @@ function errorHandler(jqXHR, textStatus, error) {
 }
 
 function showHomePage() {
-    document.getElementById('home-page').style.display = "block";
-    document.getElementById('add-page').style.display = "none";
-    document.getElementById('detail-page').style.display = "none";
+    $("#home-page").show();
+    $("#add-page").hide();
+    $("#detail-page").hide();
 }
 
 function showAddPage() {
-    document.getElementById('home-page').style.display = "none";
-    document.getElementById('add-page').style.display = "block";
-    document.getElementById('detail-page').style.display = "none";
+    $("#home-page").hide();
+    $("#add-page").show();
+    $("#detail-page").hide();
 }
 
-function showDetailPage() {
-    document.getElementById('home-page').style.display = "none";
-    document.getElementById('add-page').style.display = "none";
-    document.getElementById('detail-page').style.display = "block";
+function showDetailPage(user) {
+    // empty previous content
+    $('#detail-page').empty()
+    // append info to detail-page
+    $('#detail-page').append( $("<h3></h3>").text("Contact") ) 
+    $('#detail-page').append( $("<p></p>").text(`Name: ${user.name}`) )
+    $('#detail-page').append( $("<p></p>").text(`Email: ${user.email}`) )
+    $('#detail-page').append( $("<p></p>").text(`Phone: ${user.phone}`) )
+    // change the visibility
+    $("#home-page").hide();
+    $("#add-page").hide();
+    $("#detail-page").show();
 }
 
-function validateEmail(emailField) {
+function validateUser(user) {
+    // validate name
+    if (user.name.length == 0) {
+        alert('Invalid name, please re-enter');
+        return false;
+    }
+
+    // validate email
     let reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-
-    if (reg.test(emailField) == false) {
+    if (reg.test(user.email) == false) {
         alert('Invalid email address, please re-enter');
         return false;
     }
 
-    return true;
-}
-
-function validatePhone(phoneField) {
-    let reg = /^[\+]?[(]?[2-9]{1}\d{2}[)]?[-\s\.]?[2-9]{1}\d{2}[-\s\.]?[0-9]{4,6}$/im
-
-    if (reg.test(phoneField) == false) {
+    // validate phone number
+    reg = /^[\+]?[(]?[2-9]{1}\d{2}[)]?[-\s\.]?[2-9]{1}\d{2}[-\s\.]?[0-9]{4,6}$/im
+    if (reg.test(user.phone) == false) {
         alert('Invalid phone number, please re-enter');
         return false;
     }
 
+    // all done
     return true;
 }
