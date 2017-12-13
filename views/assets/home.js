@@ -1,5 +1,7 @@
 // client side
 // when DOM is ready
+let lastId = 0;
+
 $(() => {
     // load all users
     requestUsers();
@@ -50,6 +52,7 @@ function requestUsers() {
     })
     .done(successHandler)
     .fail(errorHandler)
+
 }
 
 
@@ -67,10 +70,18 @@ function sendUser(user) {
     .fail(errorHandler)
 }
 
-function deleteUser() {
 
+function deleteUser(id) {
+    $.ajax({
+        type: 'DELETE',
+        url: `api/user/${id}`,
+        data: JSON.stringify(id),
+        contentType: 'application/json',
+        dataType: 'json',
+    })
+    .done(successHandler)
+    .fail(errorHandler)
 }
-
 
 
 function successHandler(users) {
@@ -84,6 +95,8 @@ function successHandler(users) {
         $line.append( $( "<td></td>" ).html( user.email ) )
         $line.append( $( "<td></td>" ).html( user.phone ) )
         $table.append( $line )
+
+        lastId = user.id;
     }
 
     $('#table').empty()
@@ -123,13 +136,14 @@ function showDetailPage(user) {
 
 
 
+
     // add delete button
     const deleteButton = $("<button></button>").text('DELETE');
     deleteButton.click(() => {
         const choice = confirm("Are you sure to delete this contact member?")
         if (choice == true) {
             // ---------------- go to server side, find and delete ------------
-            deleteUser(user);
+            deleteUser(lastId);
         }
     })
 
