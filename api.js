@@ -33,28 +33,32 @@ api.post('/user', (req, res) => {
 
 
 api.delete('/user/:id', (req, res) => {
-    const id = JSON.parse(req.body);
-    const users = store.getUsers();
-    const deleteDone = false;
+    console.log(req.params.id)
+    const id = req.params.id;
+    let users = store.getUsers();
+    let deleteDone = false;
 
-    const lastIndex = users.length - 1;
+    let lastIndex = users.length - 1;
     let index = lastIndex;
-    while (deleteDone || index >= 0) {
+    while (!deleteDone && index >= 0) {
         if (users[index].id == id) {
             let temp;
             while (index != lastIndex) {
                 temp = users[index];
                 users[index] = users[index + 1];
                 users[index + 1] = temp;
+                index++;
             }
             users.pop();
             deleteDone = true;
+            console.log("done")
         }
-        index++;
+        console.log(`${index}`);
+        index--;
     }
 
-    store.saveUsers()
-    res.json({message : 'deleted'});
+    store.saveUsers(users)
+    res.json(users);
 })
 
 // api.put('user/:index', (req, res) => {

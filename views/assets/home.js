@@ -35,6 +35,36 @@ $(() => {
 
     })
 
+    // submit event handler
+    $('#edit-submitButton').click(() => {
+        const user = {
+            name: $('input[name=edit-name]').val(),
+            email: $('input[name=edit-email]').val(),
+            phone: $('input[name=edit-phone]').val(),
+        }
+        
+        // --------- production version ------------
+        // // if email is valid
+        // if (validateUser(user)) {
+        //     // model -> send data to server side
+        //     sendUser(user);
+        //     // view -> show confirm-page
+        //     showDetailPage(user);
+        //     // view -> reset add-page previous input value
+        //     $('#add-page input').val("");
+        // }
+
+        // test version
+        // if validate
+        // model -> delete previous edited data
+        deleteUser(lastId);
+        // model -> send data to server side
+        sendUser(user);
+        showHomePage();
+    })
+
+    // by default -> show home-page
+    showHomePage();
     // index button -> show home-page
     $('#listButton').click(showHomePage)
     // new button -> show add-page
@@ -75,8 +105,6 @@ function deleteUser(id) {
     $.ajax({
         type: 'DELETE',
         url: `api/user/${id}`,
-        data: JSON.stringify(id),
-        contentType: 'application/json',
         dataType: 'json',
     })
     .done(successHandler)
@@ -113,6 +141,7 @@ function showHomePage() {
     $("#home-page").show();
     $("#add-page").hide();
     $("#detail-page").hide();
+    $("#edit-page").hide();
 }
 
 
@@ -120,8 +149,16 @@ function showAddPage() {
     $("#home-page").hide();
     $("#add-page").show();
     $("#detail-page").hide();
+    $("#edit-page").hide();
 }
 
+
+function showEditPage() {
+    $("#home-page").hide();
+    $("#add-page").hide();
+    $("#detail-page").hide();
+    $("#edit-page").show();
+}
 
 function showDetailPage(user) {
     // empty previous content
@@ -131,11 +168,17 @@ function showDetailPage(user) {
     $('#detail-page').append( $("<p></p>").text(`Name: ${user.name}`) )
     $('#detail-page').append( $("<p></p>").text(`Email: ${user.email}`) )
     $('#detail-page').append( $("<p></p>").text(`Phone: ${user.phone}`) )
+
     // add edit button
-    $('#detail-page').append( $("<button></button>").text('EDIT') )
-
-
-
+    const editButton = $("<button></button>").text('EDIT');
+    editButton.click(() => {
+        // show edit-page
+        $('input[name=edit-name]:text').val(`${user.name}`);
+        $('input[name=edit-email]:text').val(`${user.email}`);
+        $('input[name=edit-phone]:text').val(`${user.phone}`);
+        showEditPage();
+    })
+    $('#detail-page').append(editButton)
 
     // add delete button
     const deleteButton = $("<button></button>").text('DELETE');
@@ -144,16 +187,20 @@ function showDetailPage(user) {
         if (choice == true) {
             // ---------------- go to server side, find and delete ------------
             deleteUser(lastId);
+            lastId--;
+            showHomePage();
         }
     })
-
     $('#detail-page').append(deleteButton)
 
     // change the visibility
     $("#home-page").hide();
     $("#add-page").hide();
     $("#detail-page").show();
+    $("#edit-page").hide();
 }
+
+
 function validateUser(user) {
     // validate name
     if (user.name.length == 0) {
