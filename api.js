@@ -48,6 +48,28 @@ api.post('/user', (req, res) => {
 })
 
 
+api.put('/user/:id', (req, res) => {
+    const editedUser = req.body;
+    console.log(editedUser)
+    let users = store.getUsers();
+    let editDone = false;
+    let index = 0;
+
+    while (!editDone && index < users.length) {
+        if (users[index].id == editedUser.id) {
+            users[index].name = editedUser.name;
+            users[index].email = editedUser.email;
+            users[index].phone = editedUser.phone;
+    
+            editDone = true;
+        }
+        index++;
+    }
+
+    store.saveUsers(users);
+    res.json(users);
+})
+
 api.delete('/user/:id', (req, res) => {
     console.log(req.params.id)
     const id = req.params.id;

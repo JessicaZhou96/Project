@@ -32,34 +32,6 @@ $(() => {
 
     })
 
-    // submit event handler
-    $('#edit-submitButton').click(() => {
-        const user = {
-            name: $('input[name=edit-name]').val(),
-            email: $('input[name=edit-email]').val(),
-            phone: $('input[name=edit-phone]').val(),
-        }
-        
-        // --------- production version ------------
-        // // if email is valid
-        // if (validateUser(user)) {
-        //     // model -> send data to server side
-        //     sendUser(user);
-        //     // view -> show confirm-page
-        //     showDetailPage(user);
-        //     // view -> reset add-page previous input value
-        //     $('#add-page input').val("");
-        // }
-
-        // test version
-        // if validate
-        // model -> delete previous edited data
-        deleteUser(lastId);
-        // model -> send data to server side
-        sendUser(user);
-        showHomePage();
-    })
-
     // by default -> show home-page
     showHomePage();
     // index button -> show home-page
@@ -100,6 +72,19 @@ function deleteUser(id) {
     $.ajax({
         type: 'DELETE',
         url: `api/user/${id}`,
+        dataType: 'json',
+    })
+    .done(successHandler)
+    .fail(errorHandler)
+}
+
+function editUser(editedUser) {
+    $.ajax({
+        type: 'PUT',
+        url: `api/user/${editedUser.id}`,
+        data: JSON.stringify(editedUser),
+        // send data type
+        contentType: 'application/json',
         dataType: 'json',
     })
     .done(successHandler)
@@ -182,7 +167,52 @@ function showAddPage() {
 }
 
 
-function showEditPage() {
+function showEditPage(user) {
+    // $('#edit-page').empty()
+    // show edit-page, append info to edit-page
+    // old version without 
+    // $('#edit-page').append( $('input[name=edit-name]:text').val(`${user.name}`) )
+
+    // $('#edit-page').append( $("<h3></h3>").text("Edit Contact") ) 
+    // $('#edit-page').append( $('<label>Name</label>') )
+    // $('#edit-page').append( $('<input></input>').val(`${user.name}`) )
+    // $('#edit-page').append( $('<label>Email</label>') )
+    // $('#edit-page').append( $('<input></input>').val(`${user.email}`) )
+    // $('#edit-page').append( $('<label>Phone</label>') )
+    // $('#edit-page').append( $('<input></input>').val(`${user.phone}`) )
+
+    $('input[name=edit-name]:text').val(`${user.name}`);
+    $('input[name=edit-email]:text').val(`${user.email}`);
+    $('input[name=edit-phone]:text').val(`${user.phone}`);
+    
+    const submitButton = $("<button></button>").text('Submit');
+    $('#edit-page').append(submitButton)
+    submitButton.click(() => {
+        let editedUser = {
+            id: user.id,
+            name: $('input[name=edit-name]').val(),
+            email: $('input[name=edit-email]').val(),
+            phone: $('input[name=edit-phone]').val(),
+        }
+        
+        // --------- production version ------------
+        // // if email is valid
+        // if (validateUser(user)) {
+        //     // model -> send data to server side
+        //     sendUser(user);
+        //     // view -> show confirm-page
+        //     showDetailPage(user);
+        //     // view -> reset add-page previous input value
+        //     $('#add-page input').val("");
+        // }
+    
+        // test version
+        // if validate
+        $('#edit-page button').remove();
+        editUser(editedUser);
+        showHomePage();
+    })
+
     $("#home-page").hide();
     $("#add-page").hide();
     $("#detail-page").hide();
@@ -193,23 +223,20 @@ function showDetailPage(user) {
     // empty previous content
     $('#detail-page').empty()
     user = JSON.parse(user)
-    console.log(user)
+
     // append info to detail-page
     $('#detail-page').append( $("<h3></h3>").text("Contact") ) 
     $('#detail-page').append( $("<p></p>").text(`Name: ${user.name}`) )
     $('#detail-page').append( $("<p></p>").text(`Email: ${user.email}`) )
     $('#detail-page').append( $("<p></p>").text(`Phone: ${user.phone}`) )
 
-    // // add edit button
-    // const editButton = $("<button></button>").text('EDIT');
-    // editButton.click(() => {
-    //     // show edit-page
-    //     $('input[name=edit-name]:text').val(`${user.name}`);
-    //     $('input[name=edit-email]:text').val(`${user.email}`);
-    //     $('input[name=edit-phone]:text').val(`${user.phone}`);
-    //     showEditPage();
-    // })
-    // $('#detail-page').append(editButton)
+    // add edit button
+    const editButton = $("<button></button>").text('EDIT');
+    editButton.click(() => { 
+        showEditPage(user) 
+    });
+
+    $('#detail-page').append(editButton)
 
     // add delete button
     const deleteButton = $("<button></button>").text('DELETE');
