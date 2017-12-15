@@ -1,14 +1,11 @@
-// client side
-// when DOM is ready
-let lastId = 0;
-
+// client side, when DOM is ready
 $(() => {
     // load all users
     requestUsers();
 
     // submit event handler
-    $('#submitButton').click(() => {
-        const user = {
+    $('#add-submitButton').click(() => {
+        let user = {
             name: $('input[name=name]').val(),
             email: $('input[name=email]').val(),
             phone: $('input[name=phone]').val(),
@@ -28,8 +25,8 @@ $(() => {
         // test version
         // model -> send data to server side
         sendUser(user);
-        // view -> show confirm-page
-        showDetailPage(user);
+        // find user With user immediately and show on details-page
+        findUserWithId(user);
         // view -> reset add-page previous input value
         $('#add-page input').val("");
 
@@ -85,7 +82,6 @@ function requestUsers() {
 
 }
 
-
 function sendUser(user) {
     $.ajax({
         type: 'POST',
@@ -100,7 +96,6 @@ function sendUser(user) {
     .fail(errorHandler)
 }
 
-
 function deleteUser(id) {
     $.ajax({
         type: 'DELETE',
@@ -111,20 +106,54 @@ function deleteUser(id) {
     .fail(errorHandler)
 }
 
+function findUserWithId (user) {
+    // get existed data from server side
+    $.ajax({
+        type: 'POST',
+        url: 'api/user/index',
+        data: JSON.stringify(user),
+        contentType: 'application/json',
+        dataType: 'json',
+    })
+    .done(showDetailPage)
+    .fail(errorHandler)
+}
+
 
 function successHandler(users) {
     console.log(`Response has ${users.length} users`)
-    var $table = $( "<table border='1'><tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th></table>" );
-    for ( let index = 0; index < users.length; index++ ) {
-        const user = users[index]
-        const $line = $( "<tr></tr>" )
-        $line.append( $( "<td></td>" ).html( user.id ) )
-        $line.append( $( "<td></td>" ).html( user.name ) )
-        $line.append( $( "<td></td>" ).html( user.email ) )
-        $line.append( $( "<td></td>" ).html( user.phone ) )
-        $table.append( $line )
+    if (users.length == 0) {
+        var $table = $( "<table border='1'><tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th></table>" );
+    } else {
+        var $table = $( "<table border='1'><tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th></th></table>" );
+        for ( let index = 0; index < users.length; index++ ) {
+            const user = users[index]
+            const $line = $( "<tr></tr>" )
+            $line.append( $( "<td></td>" ).html( user.id ) )
+            $line.append( $( "<td></td>" ).html( user.name ) )
+            $line.append( $( "<td></td>" ).html( user.email ) )
+            $line.append( $( "<td></td>" ).html( user.phone ) )
+            // view -> add three buttons to the last td
+            const detailsButton = $( "<button>/button>" ).text('DETAILS');
+            const editButton = $( "<button>/button>" ).text('EDIT');
+            const deleteButton = $( "<button>/button>" ).text('DELETE');
+            $line.append(detailsButton); 
+            $line.append(editButton); 
+            $line.append(deleteButton); 
 
-        lastId = user.id;
+            // model -> different functions for each buttons
+            deleteButton.click(() => {
+                const choice = confirm("Are you sure to delete this contact member?")
+                if (choice == true) {
+                    deleteUser(user.id);
+                    showHomePage();
+                }
+            })
+
+            $table.append( $line )
+    
+            lastId = user.id;
+        }
     }
 
     $('#table').empty()
@@ -163,22 +192,24 @@ function showEditPage() {
 function showDetailPage(user) {
     // empty previous content
     $('#detail-page').empty()
+    user = JSON.parse(user)
+    console.log(user)
     // append info to detail-page
     $('#detail-page').append( $("<h3></h3>").text("Contact") ) 
     $('#detail-page').append( $("<p></p>").text(`Name: ${user.name}`) )
     $('#detail-page').append( $("<p></p>").text(`Email: ${user.email}`) )
     $('#detail-page').append( $("<p></p>").text(`Phone: ${user.phone}`) )
 
-    // add edit button
-    const editButton = $("<button></button>").text('EDIT');
-    editButton.click(() => {
-        // show edit-page
-        $('input[name=edit-name]:text').val(`${user.name}`);
-        $('input[name=edit-email]:text').val(`${user.email}`);
-        $('input[name=edit-phone]:text').val(`${user.phone}`);
-        showEditPage();
-    })
-    $('#detail-page').append(editButton)
+    // // add edit button
+    // const editButton = $("<button></button>").text('EDIT');
+    // editButton.click(() => {
+    //     // show edit-page
+    //     $('input[name=edit-name]:text').val(`${user.name}`);
+    //     $('input[name=edit-email]:text').val(`${user.email}`);
+    //     $('input[name=edit-phone]:text').val(`${user.phone}`);
+    //     showEditPage();
+    // })
+    // $('#detail-page').append(editButton)
 
     // add delete button
     const deleteButton = $("<button></button>").text('DELETE');
@@ -186,8 +217,7 @@ function showDetailPage(user) {
         const choice = confirm("Are you sure to delete this contact member?")
         if (choice == true) {
             // ---------------- go to server side, find and delete ------------
-            deleteUser(lastId);
-            lastId--;
+            deleteUser(user.id);
             showHomePage();
         }
     })
@@ -222,3 +252,9 @@ function validateUser(user) {
     // all done
     return true;
 }
+
+
+
+
+
+

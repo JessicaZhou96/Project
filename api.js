@@ -10,6 +10,22 @@ api.get('/user', (req, res) => {
     res.json(users);
 })
 
+api.post('/user/index', (req, res) => {
+    const users = store.getUsers();
+    const user = req.body;
+    let userWithId;
+
+    for (let i = users.length - 1; i >= 0; i--) {
+        if (users[i].name == user.name &&
+            users[i].email == user.email &&
+            users[i].phone == user.phone) 
+        {
+            userWithId = users[i];
+            res.json(JSON.stringify(userWithId));
+        }
+    }
+})
+
 api.post('/user', (req, res) => {
     const user = req.body;
     const users = store.getUsers();
@@ -60,6 +76,8 @@ api.delete('/user/:id', (req, res) => {
     store.saveUsers(users)
     res.json(users);
 })
+
+
 
 // api.put('user/:index', (req, res) => {
 
