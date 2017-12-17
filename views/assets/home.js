@@ -125,8 +125,19 @@ function successHandler(users) {
             $line.append(detailsButton); 
             $line.append(editButton); 
             $line.append(deleteButton); 
+            $table.append( $line )
 
-            // model -> different functions for each buttons
+            // model -> details button
+            detailsButton.click(() => {
+                showDetailPage(users[index]);
+            })
+
+            // model -> edit button
+            editButton.click(() => {
+                showEditPage(users[index]);
+            })
+
+            // model -> delete button
             deleteButton.click(() => {
                 const choice = confirm("Are you sure to delete this contact member?")
                 if (choice == true) {
@@ -134,10 +145,6 @@ function successHandler(users) {
                     showHomePage();
                 }
             })
-
-            $table.append( $line )
-    
-            lastId = user.id;
         }
     }
 
@@ -167,24 +174,14 @@ function showAddPage() {
 }
 
 
-function showEditPage(user) {
-    // $('#edit-page').empty()
-    // show edit-page, append info to edit-page
-    // old version without 
-    // $('#edit-page').append( $('input[name=edit-name]:text').val(`${user.name}`) )
 
-    // $('#edit-page').append( $("<h3></h3>").text("Edit Contact") ) 
-    // $('#edit-page').append( $('<label>Name</label>') )
-    // $('#edit-page').append( $('<input></input>').val(`${user.name}`) )
-    // $('#edit-page').append( $('<label>Email</label>') )
-    // $('#edit-page').append( $('<input></input>').val(`${user.email}`) )
-    // $('#edit-page').append( $('<label>Phone</label>') )
-    // $('#edit-page').append( $('<input></input>').val(`${user.phone}`) )
+function showEditPage(user) {
 
     $('input[name=edit-name]:text').val(`${user.name}`);
     $('input[name=edit-email]:text').val(`${user.email}`);
     $('input[name=edit-phone]:text').val(`${user.phone}`);
     
+    $('#edit-page button').remove();
     const submitButton = $("<button></button>").text('Submit');
     $('#edit-page').append(submitButton)
     submitButton.click(() => {
@@ -219,10 +216,16 @@ function showEditPage(user) {
     $("#edit-page").show();
 }
 
+
 function showDetailPage(user) {
     // empty previous content
     $('#detail-page').empty()
-    user = JSON.parse(user)
+
+    // if user is not an object but JSON
+    if (typeof user !== 'object') {
+        // JSON parse it
+        user = JSON.parse(user)
+    }
 
     // append info to detail-page
     $('#detail-page').append( $("<h3></h3>").text("Contact") ) 
