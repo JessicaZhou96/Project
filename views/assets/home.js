@@ -12,24 +12,15 @@ $(() => {
         }
         
         // --------- production version ------------
-        // // if email is valid
-        // if (validateUser(user)) {
-        //     // model -> send data to server side
-        //     sendUser(user);
-        //     // view -> show confirm-page
-        //     showDetailPage(user);
-        //     // view -> reset add-page previous input value
-        //     $('#add-page input').val("");
-        // }
-
-        // test version
-        // model -> send data to server side
-        sendUser(user);
-        // find user With user immediately and show on details-page
-        findUserWithId(user);
-        // view -> reset add-page previous input value
-        $('#add-page input').val("");
-
+        // if email is valid
+        if (validateUser(user)) {
+            // model -> send data to server side
+            sendUser(user);
+            // find user With user immediately and show on details-page
+            findUserWithId(user);
+            // view -> reset add-page previous input value
+            $('#add-page input').val("");
+        }
     })
 
     // by default -> show home-page
@@ -119,12 +110,15 @@ function successHandler(users) {
             $line.append( $( "<td></td>" ).html( user.email ) )
             $line.append( $( "<td></td>" ).html( user.phone ) )
             // view -> add three buttons to the last td
-            const detailsButton = $( "<button>/button>" ).text('DETAILS');
-            const editButton = $( "<button>/button>" ).text('EDIT');
-            const deleteButton = $( "<button>/button>" ).text('DELETE');
-            $line.append(detailsButton); 
-            $line.append(editButton); 
-            $line.append(deleteButton); 
+            const $lastCell = $( "<td></td>" ).attr('class', 'lastCell');
+
+            $line.append($lastCell);
+            const detailsButton = $( "<button>/button>" ).text('DETAILS').attr('class', 'detailBttn');
+            const editButton = $( "<button>/button>" ).text('EDIT').attr('class', 'editBttn');
+            const deleteButton = $( "<button>/button>" ).text('DELETE').attr('class', 'deleteBttn');
+            $lastCell.append(detailsButton)
+            $lastCell.append(editButton)
+            $lastCell.append(deleteButton)
             $table.append( $line )
 
             // model -> details button
@@ -193,21 +187,12 @@ function showEditPage(user) {
         }
         
         // --------- production version ------------
-        // // if email is valid
-        // if (validateUser(user)) {
-        //     // model -> send data to server side
-        //     sendUser(user);
-        //     // view -> show confirm-page
-        //     showDetailPage(user);
-        //     // view -> reset add-page previous input value
-        //     $('#add-page input').val("");
-        // }
-    
-        // test version
-        // if validate
-        $('#edit-page button').remove();
-        editUser(editedUser);
-        showHomePage();
+        // if email is valid
+        if (validateUser(user)) {
+            $('#edit-page button').remove();
+            editUser(editedUser);
+            showHomePage();
+        }
     })
 
     $("#home-page").hide();
@@ -234,7 +219,7 @@ function showDetailPage(user) {
     $('#detail-page').append( $("<p></p>").text(`Phone: ${user.phone}`) )
 
     // add edit button
-    const editButton = $("<button></button>").text('EDIT');
+    const editButton = $("<button></button>").text('EDIT').attr('class', 'editBttn');
     editButton.click(() => { 
         showEditPage(user) 
     });
@@ -242,7 +227,7 @@ function showDetailPage(user) {
     $('#detail-page').append(editButton)
 
     // add delete button
-    const deleteButton = $("<button></button>").text('DELETE');
+    const deleteButton = $("<button></button>").text('DELETE').attr('class', 'deleteBttn');
     deleteButton.click(() => {
         const choice = confirm("Are you sure to delete this contact member?")
         if (choice == true) {

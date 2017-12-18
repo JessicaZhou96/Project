@@ -1,0 +1,204 @@
+/* ----------------------------------home page header--------------------------------------------- */
+body {
+    margin: auto;
+    width: 80%;
+}
+
+#header {
+    background-color: royalblue;
+    color: white;
+}
+
+#header h2 {
+    position: relative;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    left: 15%;
+}
+
+#header button {
+    font-size: 15px;
+    border-radius: 8px;
+    position: relative;
+}
+
+#listButton {
+    left: 20%;
+}
+
+#newButton {
+    left: 25%;
+}
+
+/* ----------------------------------home page table--------------------------------------------- */
+
+#home-page {
+    position: relative;
+    left: 7%;
+}
+
+
+td {
+    border: 1px solid rgb(194, 194, 194);
+    border-left: none;
+    border-right: none;
+    padding: 10px;
+    text-align: center;
+    width: 150px;
+    height: 20px;
+}
+
+table {
+    border-collapse: collapse;
+    empty-cells: hide;
+    border-left: none;
+    border-right: none;
+}
+
+th {
+    border-left: none;
+    border-right: none;
+    border-bottom: 1px solid black;
+}
+
+
+.lastCell {
+    width: 200px;
+}
+
+.lastCell button {
+    margin-left: 5px;
+}
+
+.detailBttn {
+    color: royalblue;
+    border-color: royalblue;
+    font-size: 12px;
+}
+
+.editBttn {
+    color: orange;
+    border-color: orange;
+    font-size: 12px;
+}
+
+.deleteBttn {
+    color: red;
+    border-color: red;
+    font-size: 12px;
+}
+
+
+/* ---------------------------------- add page --------------------------------------------- */
+#add-page {
+    position: relative;
+    left: 15%;
+    border: 1px solid gray;
+    width: 70%
+}
+
+#add-page input {
+    width: 83%;
+    height: 20px;
+    font-size: 15px;
+    margin-top: 10px; 
+}
+
+#add-page > * {
+    margin-bottom: 20px;
+}
+
+#add-page h3 {
+    position: relative;
+    left: 2%;
+    width: 50%;
+}
+
+#add-page div {
+    position: relative;
+    left: 7%;
+}
+
+#add-submitButton {
+    position: relative;
+    font-size: 15px;
+    border-radius: 8px;
+    color: white;
+    background-color: #32CD32;
+    border: none;
+    left: 82%;
+}
+ 
+
+/* ---------------------------------- detail page --------------------------------------------- */
+#detail-page {
+    position: relative;
+    left: 15%;
+    border: 1px solid gray;
+    width: 70%
+}
+
+#detail-page h3 {
+    position: relative;
+    left: 2%;
+    width: 50%;
+}
+
+#detail-page p {
+    position: relative;
+    left: 7%;
+    width: 83%;
+}
+
+#detail-page > * {
+    margin-bottom: 20px;
+}
+
+#detail-page button {
+    position: relative;
+    margin-left: 15px;
+    left: 75%;
+}
+
+
+/* ---------------------------------- edit page --------------------------------------------- */
+#edit-page {
+    position: relative;
+    left: 15%;
+    border: 1px solid gray;
+    width: 70%
+}
+
+#edit-page input {
+    width: 83%;
+    height: 20px;
+    font-size: 15px;
+    margin-top: 10px; 
+}
+
+#edit-page > * {
+    margin-bottom: 20px;
+}
+
+#edit-page h3 {
+    position: relative;
+    left: 2%;
+    width: 50%;
+}
+
+#edit-page div {
+    position: relative;
+    left: 7%;
+}
+
+#edit-page button {
+    position: relative;
+    font-size: 15px;
+    border-radius: 8px;
+    color: white;
+    background-color: #32CD32;
+    border: none;
+    left: 82%;
+}
+
+
