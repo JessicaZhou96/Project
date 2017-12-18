@@ -99,7 +99,7 @@ function findUserWithId (user) {
 function successHandler(users) {
     console.log(`Response has ${users.length} users`)
     if (users.length == 0) {
-        var $table = $( "<table border='1'><tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th></table>" );
+        var $table = $( "<table border='1'><tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th></th></table>" );
     } else {
         var $table = $( "<table border='1'><tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th></th></table>" );
         for ( let index = 0; index < users.length; index++ ) {

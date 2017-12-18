@@ -59,6 +59,8 @@ th {
     border-left: none;
     border-right: none;
     border-bottom: 1px solid black;
+    width: 150px;
+    height: 20px;
 }
 
 
